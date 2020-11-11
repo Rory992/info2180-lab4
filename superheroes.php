@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 
 $superheroes = [
   [
@@ -60,13 +61,33 @@ $superheroes = [
       "name" => "Wanda Maximoff",
       "alias" => "Scarlett Witch",
       "biography" => "Notably powerful, Wanda Maximoff has fought both against and with the Avengers, attempting to hone her abilities and do what she believes is right to help the world.",
-  ], 
+  ],
 ];
 
 ?>
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
+<?php
+$newString = filter_var($_GET['query'], FILTER_SANITIZE_STRING);
+?>
+
+<?php if($newString==""):?>
+    <ul>
+        <?php foreach ($superheroes as $superhero): ?>
+            <li><?= $superhero['alias']; ?></li>
+            <?php endforeach; ?>
+    </ul>
+        <?php endif;?>
+
+<?php foreach ($superheroes as $superhero):?>
+    <?php if($newString == $superhero['name'] or $newString == $superhero['alias'] ):?>
+        <h3><?= $superhero['alias']; ?></h3>
+        <h4><?= $superhero['name']; ?></h4>
+        <p><?= $superhero['biography']; ?></p>
+        <?php break?>
+    <?php endif;?>
 <?php endforeach; ?>
-</ul>
+
+<?php if($newString != $superhero['name'] && $newString != "" &&  $newString != $superhero['alias']):?>
+<font color = "red">
+<h2>"SUPERHERO NOT FOUND"</h2>
+<?php endif;?>
